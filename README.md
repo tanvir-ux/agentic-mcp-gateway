@@ -1,4 +1,5 @@
-     **Model Context Protocol (MCP)** tools into an **agentic loop** for operations work: retrieve policy from a local knowledge base (RAG), search mock payments, and open tickets — the same shape as production copilots that sit in front of core banking / ops APIs, without any proprietary code.
+**Model Context Protocol (MCP)** 
+## tools into an **agentic loop** for operations work: retrieve policy from a local knowledge base (RAG), search mock payments, and open tickets — the same shape as production copilots that sit in front of core banking / ops APIs, without any proprietary code.
 
 This repository is original demo software by [Md Tanvir Alam](https://github.com/tanvir-ux). It uses generic payments, KYC, and interbank-messaging concepts only.
 
