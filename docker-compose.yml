@@ -1,0 +1,20 @@
+services:
+  gateway:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      LLM_PROVIDER: fake
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      KB_DIR: /app/docs/kb
+      DATA_DIR: /app/data
+    volumes:
+      - gateway-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  gateway-data:
