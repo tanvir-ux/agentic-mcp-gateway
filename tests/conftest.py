@@ -32,4 +32,5 @@ def store() -> OpsStore:
 
 @pytest.fixture
 def registry(settings: Settings, store: OpsStore) -> ToolRegistry:
-    return ToolRegistry(settings=settings, store=store)
+    # Legacy unit tests call side-effect tools directly; ASCP covered in test_ascp.py
+    return ToolRegistry(settings=settings, store=store, enforce_ascp=False)

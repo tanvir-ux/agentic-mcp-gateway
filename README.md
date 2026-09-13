@@ -46,6 +46,23 @@ flowchart LR
 
 The MCP server and the HTTP agent share **one tool registry**. That is the production pattern: expose the same typed capabilities over stdio/SSE for IDE agents *and* over HTTP for a product UI.
 
+## Action-bound authorization (ASCP spike)
+
+Side-effect tools (`create_ticket`, `create_transfer`) are gated by a digest-locked HITL check:
+
+- `action_digest = SHA256(canonical_json({agent_id, tool, args, policy_version}))`
+- Approving digest **A** does **not** authorize a call whose args hash to **B** (parameter-swap / approve-then-mutate)
+- Approvals are one-shot (consumed on successful execute)
+- Read tools (`retrieve_docs`, `search_payments`) stay ALLOW without HITL
+
+```bash
+PYTHONPATH=src pytest -q tests/test_ascp.py
+```
+
+Legacy agent FakeLLM tests opt out with `enforce_ascp=False` in fixtures. Production-shaped registries keep `enforce_ascp=True` (default).
+
+This is the harness wedge for the paper claim *Action-Bound Authorization for MCP Tool Calls* — not a new MCP protocol.
+
 ## Quick start
 
 Python 3.11+ (3.12/3.13 fine). No API key required.

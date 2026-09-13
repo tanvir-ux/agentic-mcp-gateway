@@ -9,7 +9,7 @@ from agentic_mcp_gateway.tools import ToolRegistry
 
 def test_tool_registration_names(registry: ToolRegistry) -> None:
     names = registry.names()
-    assert names == ["create_ticket", "retrieve_docs", "search_payments"]
+    assert names == ["create_ticket", "create_transfer", "retrieve_docs", "search_payments"]
 
 
 def test_openai_schema_has_functions(registry: ToolRegistry) -> None:
@@ -47,4 +47,4 @@ def test_create_ticket_rejects_unknown_queue(registry: ToolRegistry) -> None:
 @pytest.mark.asyncio
 async def test_mcp_list_tools_matches_registry() -> None:
     tools = await list_tools()
-    assert {t.name for t in tools} == {"retrieve_docs", "search_payments", "create_ticket"}
+    assert {t.name for t in tools} == {"retrieve_docs", "search_payments", "create_ticket", "create_transfer"}
