@@ -193,6 +193,43 @@ class OpsStore:
         self._conn.commit()
         return payload
 
+    def create_transfer(
+        self,
+        originator: str,
+        beneficiary: str,
+        amount: float,
+        end_to_end_id: str,
+        currency: str = "USD",
+    ) -> dict[str, Any]:
+        n = self._conn.execute("SELECT COUNT(*) AS c FROM payments").fetchone()["c"]
+        payment_id = f"PMT-{2000 + int(n) + 1}"
+        payload = {
+            "payment_id": payment_id,
+            "end_to_end_id": end_to_end_id,
+            "originator": originator,
+            "beneficiary": beneficiary,
+            "currency": currency,
+            "amount": amount,
+            "value_date": date.today().isoformat(),
+            "status": "submitted",
+            "hold_reason": None,
+            "scheme_ref": f"UETR-xfer-{payment_id}",
+        }
+        self._conn.execute(
+            """
+            INSERT INTO payments (
+                payment_id, end_to_end_id, originator, beneficiary,
+                currency, amount, value_date, status, hold_reason, scheme_ref
+            ) VALUES (
+                :payment_id, :end_to_end_id, :originator, :beneficiary,
+                :currency, :amount, :value_date, :status, :hold_reason, :scheme_ref
+            )
+            """,
+            payload,
+        )
+        self._conn.commit()
+        return payload
+
     def list_tickets(self) -> list[dict[str, Any]]:
         rows = self._conn.execute("SELECT * FROM tickets ORDER BY ticket_id").fetchall()
         return [dict(r) for r in rows]

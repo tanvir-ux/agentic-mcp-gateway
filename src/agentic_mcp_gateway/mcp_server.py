@@ -26,7 +26,7 @@ def build_mcp_server(registry: ToolRegistry | None = None) -> MCPServer:
 
     @mcp.tool(description=registry.get("retrieve_docs").description)
     def retrieve_docs(query: str, top_k: int = 3) -> str:
-        return registry.retrieve_docs(query=query, top_k=top_k)
+        return registry.call("retrieve_docs", query=query, top_k=top_k)
 
     @mcp.tool(description=registry.get("search_payments").description)
     def search_payments(
@@ -35,7 +35,8 @@ def build_mcp_server(registry: ToolRegistry | None = None) -> MCPServer:
         status: str | None = None,
         q: str | None = None,
     ) -> str:
-        return registry.search_payments(
+        return registry.call(
+            "search_payments",
             payment_id=payment_id,
             end_to_end_id=end_to_end_id,
             status=status,
@@ -49,11 +50,29 @@ def build_mcp_server(registry: ToolRegistry | None = None) -> MCPServer:
         body: str,
         related_payment_id: str | None = None,
     ) -> str:
-        return registry.create_ticket(
+        return registry.call(
+            "create_ticket",
             title=title,
             queue=queue,
             body=body,
             related_payment_id=related_payment_id,
+        )
+
+    @mcp.tool(description=registry.get("create_transfer").description)
+    def create_transfer(
+        originator: str,
+        beneficiary: str,
+        amount: float,
+        end_to_end_id: str,
+        currency: str = "USD",
+    ) -> str:
+        return registry.call(
+            "create_transfer",
+            originator=originator,
+            beneficiary=beneficiary,
+            amount=amount,
+            end_to_end_id=end_to_end_id,
+            currency=currency,
         )
 
     return mcp
